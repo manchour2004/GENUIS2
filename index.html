@@ -423,10 +423,10 @@
       }
       window.ajouterPoint = function (equipe, points) {
         if (equipe === 1) {
-          equipe1Score = Math.max(0, equipe1Score + points);
+          equipe1Score =  equipe1Score + points;
           document.getElementById('equipe1Score').innerText = equipe1Score;
         } else {
-          equipe2Score = Math.max(0, equipe2Score + points);
+          equipe2Score = equipe2Score + points;
           document.getElementById('equipe2Score').innerText = equipe2Score;
         }
       };
