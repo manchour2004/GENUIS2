@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Génie en Herbe - Système de Pointage </title>
+  <meta name="description"
+    content="Application de gestion des points pour les compétitions de génie en herbe">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      background-color: currentColor;
+      mask-size: cover;
+      -webkit-mask-size: cover;
+    }
+
+    .icon-zap {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'%3E%3C/polygon%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'%3E%3C/polygon%3E%3C/svg%3E");
+    }
+
+    .icon-trophy {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9H4.5a2.5 2.5 0 0 1 0-5H6'%3E%3C/path%3E%3Cpath d='M18 9h1.5a2.5 2.5 0 0 0 0-5H18'%3E%3C/path%3E%3Cpath d='M4 22h16'%3E%3C/path%3E%3Cpath d='M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22'%3E%3C/path%3E%3Cpath d='M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22'%3E%3C/path%3E%3Cpath d='M18 2H6v7a6 6 0 0 0 12 0V2Z'%3E%3C/path%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9H4.5a2.5 2.5 0 0 1 0-5H6'%3E%3C/path%3E%3Cpath d='M18 9h1.5a2.5 2.5 0 0 0 0-5H18'%3E%3C/path%3E%3Cpath d='M4 22h16'%3E%3C/path%3E%3Cpath d='M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22'%3E%3C/path%3E%3Cpath d='M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22'%3E%3C/path%3E%3Cpath d='M18 2H6v7a6 6 0 0 0 12 0V2Z'%3E%3C/path%3E%3C/svg%3E");
+    }
+
+    .icon-activity {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 18 12 15 21 9 3 6 12 2 12'%3E%3C/polyline%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 18 12 15 21 9 3 6 12 2 12'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    .icon-plus {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+    }
+
+    .icon-minus {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+    }
+
+    .icon-timer {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='10' y1='2' x2='14' y2='2'%3E%3C/line%3E%3Cline x1='12' y1='14' x2='12' y2='8'%3E%3C/line%3E%3Ccircle cx='12' cy='14' r='8'%3E%3C/circle%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='10' y1='2' x2='14' y2='2'%3E%3C/line%3E%3Cline x1='12' y1='14' x2='12' y2='8'%3E%3C/line%3E%3Ccircle cx='12' cy='14' r='8'%3E%3C/circle%3E%3C/svg%3E");
+    }
+
+    .icon-rotate-ccw {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2v6h6'%3E%3C/path%3E%3Cpath d='M3 13a9 9 0 1 0 3-7.7L3 8'%3E%3C/path%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2v6h6'%3E%3C/path%3E%3Cpath d='M3 13a9 9 0 1 0 3-7.7L3 8'%3E%3C/path%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 p-4 text-white">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10 pt-6">
+      <h1 class="text-5xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
+        Génie en Herbe
+      </h1>
+      <p class="text-xl text-cyan-300">GESTION DES POINTS</p>
+
+      <div class="flex flex-col justify-center items-center gap-2 lg:flex-row">
+        <div id="nouveauMatchEcran" class="hidden">
+          <button id="nouveauMatch"
+            class="flex justify-center items-center w-48 text-center mt-6 px-4 py-2 rounded-md bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white border-none shadow-[0_0_10px_rgba(6,182,212,0.7)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.9)]">
+            <span class="icon icon-zap mr-2 h-5 w-5"></span>
+            Nouveau Match
+          </button>
+        </div>
+
+        <div id="finMatchEcran" class="hidden">
+          <button id="finMatch"
+            class="flex justify-center items-center w-48 text-center mt-6 px-4 py-2 rounded-md bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white border-none shadow-[0_0_10px_rgba(6,182,212,0.7)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.9)]">
+            <span class="icon icon-zap mr-2 h-5 w-5"></span>
+            Fin de Match
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div id="ecranConfiguration"
+        class="col-span-1 lg:col-span-3 bg-black/30 backdrop-blur-md border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.5)] rounded-xl overflow-hidden">
+        <div class="border-b border-cyan-500/30 bg-gradient-to-r from-cyan-950/50 to-purple-950/50 p-4">
+          <h2 class="text-2xl text-cyan-300 flex items-center justify-center">
+            <span class="icon icon-zap mr-2 h-6 w-6 text-cyan-400"></span>
+            Configuration du Match
+          </h2>
+        </div>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+            <div>
+              <label class="text-cyan-300 block mb-1">Nom de l'Équipe 1</label>
+              <input id="equipe1Nom" placeholder="Équipe 1"
+                class="w-full px-3 py-2 rounded-md bg-slate-800/50 border border-cyan-500/30 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring focus:ring-cyan-400/20 outline-none" />
+            </div>
+            <div>
+              <label class="text-cyan-300 block mb-1">Nom de l'Équipe 2</label>
+              <input id="equipe2Nom" placeholder="Équipe 2"
+                class="w-full px-3 py-2 rounded-md bg-slate-800/50 border border-cyan-500/30 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring focus:ring-cyan-400/20 outline-none" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="demarrerMatchEcran" class="flex justify-center items-center col-span-1 lg:col-span-3">
+        <button id="demarrerMatch"
+          class="mt-6 px-4 py-2 rounded-md bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white border-none shadow-[0_0_10px_rgba(6,182,212,0.7)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.9)] flex items-center">
+          <span class="icon icon-zap mr-2 h-5 w-5"></span>
+          Démarrer le Match
+        </button>
+      </div>
+
+      <div id="equipe1Ecran"
+        class="hidden bg-black/30 backdrop-blur-md border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.5)] rounded-xl overflow-hidden">
+        <div class="border-b border-blue-500/30 bg-gradient-to-r from-blue-950/50 to-indigo-950/50 p-4">
+          <h2 id="equipe1Name" class="text-2xl text-blue-300 text-center">Équipe 1</h2>
+        </div>
+        <div class="text-center p-6">
+          <div class="mb-6 relative">
+            <div id="equipe1Score"
+              class="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">0
+            </div>
+            <div
+              class="absolute -inset-1 rounded-full blur opacity-30 bg-gradient-to-r from-blue-400 to-indigo-300 -z-10">
+            </div>
+            <span class="icon icon-trophy h-8 w-8 text-blue-400 mx-auto mt-2"></span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <button onclick="ajouterPoint(1, 10)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 10 Points
+            </button>
+            <button onclick="ajouterPoint(1, -10)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 10 Points
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <button onclick="ajouterPoint(1, 20)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 20 Points
+            </button>
+            <button onclick="ajouterPoint(1, -20)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 20 Points
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <button onclick="ajouterPoint(1, 30)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 30 Points
+            </button>
+            <button onclick="ajouterPoint(1, -30)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 30 Points
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <button onclick="ajouterPoint(1, 40)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 40 Points
+            </button>
+            <button onclick="ajouterPoint(1, -40)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 40 Points
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="minuteurEcran"
+        class="hidden bg-black/30 backdrop-blur-md border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.5)] rounded-xl overflow-hidden">
+        <div class="border-b border-purple-500/30 bg-gradient-to-r from-purple-950/50 to-fuchsia-950/50 p-4">
+          <h2 class="text-2xl text-purple-300 text-center flex items-center justify-center">
+            <span class="icon icon-activity mr-2 h-6 w-6 text-purple-400"></span>
+            Minuteur
+          </h2>
+        </div>
+        <div class="text-center p-6">
+          <div class="relative mb-8">
+            <div id="tempsEcran"
+              class="text-7xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-300">
+              02:00
+            </div>
+            <div
+              class="absolute -inset-1 rounded-full blur opacity-30 bg-gradient-to-r from-purple-400 to-fuchsia-300 -z-10">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4">
+            <button id="debutTemps"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-timer mr-1 h-4 w-4"></span> Démarrer
+            </button>
+            <button id="pauseMin"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 border-none shadow-[0_0_10px_rgba(234,179,8,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(234,179,8,0.7)] opacity-50 ">
+              <span class="icon icon-timer mr-1 h-4 w-4"></span> Pause
+            </button>
+            <button id="reinitialTemps"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-slate-600 to-slate-400 hover:from-slate-500 hover:to-slate-300 border-none shadow-[0_0_10px_rgba(148,163,184,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(148,163,184,0.7)]">
+              <span class="icon icon-rotate-ccw mr-1 h-4 w-4"></span> Reset
+            </button>
+          </div>
+          <label class="text-slate-500 block mb-1 mt-32">Minuteur en secondes</label>
+          <div class="flex flex-row gap-4 items-center justify-center mb-4">
+            <div>
+                <input type="number" min="0" max="99" step="5" id="minuteurInput" value="10"
+                class="w-full px-3 py-2 rounded-md bg-slate-800/50 border border-cyan-500/30 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring focus:ring-cyan-400/20 outline-none" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="equipe2Ecran"
+        class="hidden bg-black/30 backdrop-blur-md border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.5)] rounded-xl overflow-hidden">
+        <div class="border-b border-red-500/30 bg-gradient-to-r from-red-950/50 to-rose-950/50 p-4">
+          <h2 id="equipe2Name" class="text-2xl text-red-300 text-center">Équipe 2</h2>
+        </div>
+        <div class="text-center p-6">
+          <div class="mb-6 relative">
+            <div id="equipe2Score"
+              class="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-rose-300">0</div>
+            <div class="absolute -inset-1 rounded-full blur opacity-30 bg-gradient-to-r from-red-400 to-rose-300 -z-10">
+            </div>
+            <span class="icon icon-trophy h-8 w-8 text-red-400 mx-auto mt-2"></span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <button onclick="ajouterPoint(2, 10)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 10 Points
+            </button>
+            <button onclick="ajouterPoint(2, -10)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 10 Points
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <button onclick="ajouterPoint(2, 20)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 20 Points
+            </button>
+            <button onclick="ajouterPoint(2, -20)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 20 Points
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <button onclick="ajouterPoint(2, 30)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 30 Points
+            </button>
+            <button onclick="ajouterPoint(2, -30)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 30 Points
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <button onclick="ajouterPoint(2, 40)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 border-none shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.7)]">
+              <span class="icon icon-plus mr-1 h-4 w-4"></span> 40 Points
+            </button>
+            <button onclick="ajouterPoint(2, -40)"
+              class="flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300 border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.7)]">
+              <span class="icon icon-minus mr-1 h-4 w-4"></span> 40 Points
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultatEcran"
+        class="hidden col-span-1 lg:col-span-3 bg-black/30 backdrop-blur-md border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.5)] rounded-xl overflow-hidden">
+        <div class="border-b border-cyan-500/30 bg-gradient-to-r from-cyan-950/50 to-purple-950/50 p-4">
+          <h2 class="text-2xl text-cyan-300 flex items-center justify-center">
+            <span class="icon icon-trophy mr-2 h-6 w-6 text-cyan-400"></span>
+            Résultat du Match
+          </h2>
+        </div>
+        <div class="p-6 text-center">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div id="resultatEquipe1" class="p-6 rounded-xl bg-slate-800/30">
+              <h3 id="resultatEquipe1Nom" class="text-xl text-blue-300 mb-2">Équipe 1</h3>
+              <div id="resultatEquipe1Score"
+                class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
+                0
+              </div>
+              <div id="vainqueurEquipe1" class="mt-4 text-yellow-300 flex items-center justify-center hidden">
+                <span class="icon icon-trophy mr-2 h-5 w-5"></span> Vainqueur
+              </div>
+            </div>
+
+            <div id="resultatEquipe2" class="p-6 rounded-xl bg-slate-800/30">
+              <h3 id="resultatEquipe2Nom" class="text-xl text-red-300 mb-2">Équipe 2</h3>
+              <div id="resultatEquipe2Score"
+                class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-rose-300">
+                0
+              </div>
+              <div id="vainqueurEquipe2" class="mt-4 text-yellow-300 flex items-center justify-center hidden">
+                <span class="icon icon-trophy mr-2 h-5 w-5"></span> Vainqueur
+              </div>
+            </div>
+          </div>
+
+          <div id="matchNul" class="mt-6 text-yellow-300 text-xl hidden">
+            Match nul !
+          </div>
+
+          <button id="nouveauMatchResultat"
+            class="mt-8 px-6 py-3 rounded-md bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white border-none shadow-[0_0_10px_rgba(6,182,212,0.7)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.9)] flex items-center justify-center mx-auto">
+            <span class="icon icon-zap mr-2 h-5 w-5"></span>
+            Nouveau Match
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let equipe1Nom = "Équipe 1";
+      let equipe2Nom = "Équipe 2";
+      let equipe1Score = 0;
+      let equipe2Score = 0;
+      let minutes = 0;
+      let secondes = 30;
+      let timerInterval = null;
+      let timerActif = false;
+      let timerPause = false;
+      let ecranActif = "configuration";
+      const demarrerMatchBtn = document.getElementById('demarrerMatch');
+      const nouveauMatchBtn = document.getElementById('nouveauMatch');
+      const finMatchBtn = document.getElementById('finMatch');
+      const nouveauMatchResultatBtn = document.getElementById('nouveauMatchResultat');
+      const startTimerBtn = document.getElementById('debutTemps');
+      const pauseTimerBtn = document.getElementById('pauseMin');
+      const resetTimerBtn = document.getElementById('reinitialTemps');
+      function initialiserScores() {
+        equipe1Score = 0;
+        equipe2Score = 0;
+        document.getElementById('equipe1Score').innerText = equipe1Score;
+        document.getElementById('equipe2Score').innerText = equipe2Score;
+      }
+      function demarrerMuniteur() {
+        if (!timerActif || timerPause) {
+          const inputSeconds = parseInt(document.getElementById('minuteurInput').value, 10) || 0;
+          minutes = Math.floor(inputSeconds / 60);
+          secondes = inputSeconds % 60;
+
+          timerActif = true;
+          timerPause = false;
+          startTimerBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          pauseTimerBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+          timerInterval = setInterval(function () {
+        if (secondes > 0) {
+          secondes--;
+        } else if (minutes > 0) {
+          minutes--;
+          secondes = 59;
+        } else {
+          clearInterval(timerInterval);
+          timerActif = false;
+          startTimerBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          pauseTimerBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+          document.getElementById('tempsEcran').innerText = formatTemps();
+          }, 1000);
+        }
+      }
+      function pauseTemps() {
+        if (timerActif && !timerPause) {
+          clearInterval(timerInterval);
+          timerPause = true;
+          startTimerBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          pauseTimerBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      }
+      function formatTemps() {
+        const mins = minutes < 10 ? `0${minutes}` : minutes;
+        const secs = secondes < 10 ? `0${secondes}` : secondes;
+        return `${mins}:${secs}`;
+      }
+      function reinitialiserTemps() {
+        clearInterval(timerInterval);
+        timerActif = false;
+        timerPause = false;
+        minutes = 0;
+        secondes = 30;
+        document.getElementById('tempsEcran').innerText = formatTemps();
+        startTimerBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        pauseTimerBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+      window.ajouterPoint = function (equipe, points) {
+        if (equipe === 1) {
+          equipe1Score = Math.max(0, equipe1Score + points);
+          document.getElementById('equipe1Score').innerText = equipe1Score;
+        } else {
+          equipe2Score = Math.max(0, equipe2Score + points);
+          document.getElementById('equipe2Score').innerText = equipe2Score;
+        }
+      };
+
+      function changerEcran(ecran) {
+        ecranActif = ecran;
+
+        document.getElementById('ecranConfiguration').classList.add('hidden');
+        document.getElementById('demarrerMatchEcran').classList.add('hidden');
+        document.getElementById('equipe1Ecran').classList.add('hidden');
+        document.getElementById('minuteurEcran').classList.add('hidden');
+        document.getElementById('equipe2Ecran').classList.add('hidden');
+        document.getElementById('resultatEcran').classList.add('hidden');
+        document.getElementById('nouveauMatchEcran').classList.add('hidden');
+        document.getElementById('finMatchEcran').classList.add('hidden');
+
+        if (ecran === 'configuration') {
+          document.getElementById('ecranConfiguration').classList.remove('hidden');
+          document.getElementById('demarrerMatchEcran').classList.remove('hidden');
+        } else if (ecran === 'match') {
+          document.getElementById('equipe1Ecran').classList.remove('hidden');
+          document.getElementById('minuteurEcran').classList.remove('hidden');
+          document.getElementById('equipe2Ecran').classList.remove('hidden');
+          document.getElementById('nouveauMatchEcran').classList.remove('hidden');
+          document.getElementById('finMatchEcran').classList.remove('hidden');
+        } else if (ecran === 'resultat') {
+          document.getElementById('resultatEcran').classList.remove('hidden');
+        }
+      }
+
+      function demarrerMatch() {
+        equipe1Nom = document.getElementById('equipe1Nom').value || "Équipe 1";
+        equipe2Nom = document.getElementById('equipe2Nom').value || "Équipe 2";
+        if (equipe1Nom === equipe2Nom) {
+          alert("Veuillez entrer des noms différents pour les deux équipes.");
+          return;
+        }
+        document.getElementById('equipe1Name').innerText = equipe1Nom;
+        document.getElementById('equipe2Name').innerText = equipe2Nom;
+        initialiserScores();
+        reinitialiserTemps();
+        changerEcran('match');
+      }
+
+      function finMatch() {
+        document.getElementById('resultatEquipe1Nom').innerText = equipe1Nom;
+        document.getElementById('resultatEquipe2Nom').innerText = equipe2Nom;
+        document.getElementById('resultatEquipe1Score').innerText = equipe1Score;
+        document.getElementById('resultatEquipe2Score').innerText = equipe2Score;
+
+
+        if (equipe1Score > equipe2Score) {
+          document.getElementById('resultatEquipe1').classList.add('bg-blue-900/30', 'border', 'border-blue-500/50');
+          document.getElementById('vainqueurEquipe1').classList.remove('hidden');
+          document.getElementById('vainqueurEquipe2').classList.add('hidden');
+          document.getElementById('matchNul').classList.add('hidden');
+        } else if (equipe2Score > equipe1Score) {
+          document.getElementById('resultatEquipe2').classList.add('bg-red-900/30', 'border', 'border-red-500/50');
+          document.getElementById('vainqueurEquipe2').classList.remove('hidden');
+          document.getElementById('vainqueurEquipe1').classList.add('hidden');
+          document.getElementById('matchNul').classList.add('hidden');
+        } else {
+          document.getElementById('matchNul').classList.remove('hidden');
+          document.getElementById('vainqueurEquipe1').classList.add('hidden');
+          document.getElementById('vainqueurEquipe2').classList.add('hidden');
+        }
+
+        clearInterval(timerInterval);
+        timerActif = false;
+
+        changerEcran('resultat');
+      }
+
+      function nouveauMatch() {
+        document.getElementById('equipe1Nom').value = "";
+        document.getElementById('equipe2Nom').value = "";
+        document.getElementById('resultatEquipe1').classList.remove('bg-blue-900/30', 'border', 'border-blue-500/50');
+        document.getElementById('resultatEquipe2').classList.remove('bg-red-900/30', 'border', 'border-red-500/50');
+
+        changerEcran('configuration');
+      }
+      demarrerMatchBtn.addEventListener('click', demarrerMatch);
+      nouveauMatchBtn.addEventListener('click', nouveauMatch);
+      finMatchBtn.addEventListener('click', finMatch);
+      nouveauMatchResultatBtn.addEventListener('click', nouveauMatch);
+      startTimerBtn.addEventListener('click', demarrerMuniteur);
+      pauseTimerBtn.addEventListener('click', pauseTemps);
+      resetTimerBtn.addEventListener('click', reinitialiserTemps);
+
+      changerEcran('configuration');
+    });
+  </script>
+</body>
+
+</html>
